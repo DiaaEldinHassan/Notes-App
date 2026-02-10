@@ -1,0 +1,31 @@
+{
+  "name": "Server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "type": "module",
+  "scripts": {
+    "dev": "cross-env NODE_ENV=development node --watch --watch-path=. main.js",
+    "start": "cross-env NODE_ENV=production node main.js"
+  },
+  "keywords": [
+    "NodeJS",
+    "Express",
+    "MongoDB",
+    "Authentication",
+    "JWT",
+    "bcrypt"
+  ],
+  "author": "Diaa El-Din Hassan",
+  "license": "ISC",
+  "packageManager": "pnpm@10.28.1",
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "cors": "^2.8.6",
+    "cross-env": "^10.1.0",
+    "dotenv": "^17.2.4",
+    "express": "^5.2.1",
+    "jsonwebtoken": "^9.0.3",
+    "mongoose": "^9.1.6"
+  }
+}

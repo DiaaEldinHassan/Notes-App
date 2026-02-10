@@ -1,0 +1,1 @@
+export {router as user} from "./users.controller.js"

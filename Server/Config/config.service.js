@@ -8,3 +8,4 @@ export const db_uri=process.env.DB_URI;
 export const jwt_sk=process.env.JWT_SK;
 export const salt=process.env.SALT_ROUNDS;
 export const encryption_sk=process.env.ENCRYPTION_SK;
+export const client_id=process.env.CLIENT_ID;

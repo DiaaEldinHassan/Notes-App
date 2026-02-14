@@ -5,3 +5,4 @@ export * from "./res.utils.js";
 export * from "./jwt.utils.js";
 export * from "./encrypt.utils.js";
 export * from "./decrypt.utils.js";
+export * from "./google.utils.js"

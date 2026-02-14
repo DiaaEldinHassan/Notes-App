@@ -18,13 +18,24 @@ const schema = new mongoose.Schema(
       type: String,
       required: true,
       trim: true,
-      match: /^[a-z0-9._%+-]+@(gmail|yahoo|hotmail|outlook)\.(com|net)$/i,
       unique: true,
+      // allow any valid email, not just gmail/yahoo
+      match: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
     },
     password: {
       type: String,
-      required: true,
+      required: function () {
+        return this.provider === "local";
+      },
       minlength: [8, "Minimum length of the password must be 8 characters"],
+    },
+    provider: {
+      type: String,
+      enum: ["local", "google"],
+      default: "local",
+    },
+    image: {
+      type: String,
     },
     gender: {
       type: String,
@@ -36,26 +47,28 @@ const schema = new mongoose.Schema(
       enum: [role.user, role.admin],
       default: role.user,
     },
-    bio:{
-      type:String
-    }
+    bio: {
+      type: String,
+    },
   },
   {
     collection: "Users",
     timestamps: true,
     toJSON: { virtuals: true },
     toObject: { virtuals: true },
-  },
+  }
 );
 
+// Hash password only if modified AND provider is local
 schema.pre("save", async function () {
+  if (this.provider === "google") return;
   if (!this.isModified("password")) return;
   this.password = await hashing(this.password);
 });
 
-schema.virtual("username").get(function(){
+// Virtual for full name
+schema.virtual("username").get(function () {
   return `${this.firstName} ${this.lastName}`;
 });
 
-export const usersModel =
-  mongoose.models.Users || mongoose.model("Users", schema);
+export const usersModel = mongoose.models.Users || mongoose.model("Users", schema);

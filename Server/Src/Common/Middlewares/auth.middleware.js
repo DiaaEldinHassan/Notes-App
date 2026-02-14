@@ -1,6 +1,7 @@
-import { throwError, verifyToken } from "../index.js";
+import { role, throwError, verifyToken } from "../index.js";
 
-export async function authorization(req, res, next) {
+export function authorization(aud=[role.user]){
+ return async(req, res, next)=>{ 
   try {
     const header = req.headers.authorization||req.headers.Authorization;
     if (!header || !header.startsWith("Bearer ")) {
@@ -15,5 +16,5 @@ export async function authorization(req, res, next) {
     next();
   } catch (error) {
     next(throwError(error.status, error.message));
-  }
+  }}
 }

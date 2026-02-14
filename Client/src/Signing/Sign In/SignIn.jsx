@@ -2,6 +2,7 @@ import axios from "axios";
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import note from "../../assets/notes.png";
+import GoogleSignUp from "../../Components/Google Button/Google.jsx";
 
 export default function SignIn() {
   const navigate = useNavigate();
@@ -76,6 +77,8 @@ export default function SignIn() {
           >
             Sign In
           </button>
+             or 
+          <GoogleSignUp>Sign In With Google</GoogleSignUp>
         </form>
 
         <p className="text-center text-gray-500 text-sm">

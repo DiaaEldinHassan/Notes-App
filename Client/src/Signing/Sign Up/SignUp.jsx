@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { apiUrl } from "../../../config.service";
 import GenderSelection from "../../Components/Gender Selection/Gender.jsx";
+
 export default function SignUp() {
   const navigate = useNavigate();
   const [data, setData] = useState({

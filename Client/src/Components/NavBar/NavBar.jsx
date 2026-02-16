@@ -7,12 +7,12 @@ import {
   MenuItem,
   MenuItems,
 } from "@headlessui/react";
-import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import { Link, useNavigate } from "react-router-dom";
 import note from "../../assets/notes.png";
 import male from "../../assets/male.png";
 import female from "../../assets/artist.png";
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
 import { UserContext } from "../../userContext.jsx";
 const navigation = [
   { name: "My Notes", href: "/notes/myNotes", current: false },
@@ -27,7 +27,8 @@ function classNames(...classes) {
 
 export default function Nav() {
   const navigate = useNavigate();
-  const {user, setUser} = useContext(UserContext);
+  const { user } = useContext(UserContext);
+
   function signOut() {
     localStorage.removeItem("token");
     navigate("/auth/signIn");
@@ -56,7 +57,7 @@ export default function Nav() {
           </div>
           <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
             <div className="flex shrink-0 items-center">
-              <img alt="My Notes" src={note} className="h-8 w-auto" />
+            <Link to={"/notes/myNotes"}><img alt="My Notes" src={note} className="h-8 w-auto" /></Link>  
             </div>
             <div className="hidden sm:ml-6 sm:block">
               <div className="flex space-x-4">
@@ -102,7 +103,13 @@ export default function Nav() {
                 <span className="sr-only">Open user menu</span>
                 <img
                   alt=""
-                  src={user && user.gender === "Male" ? male : female}
+                  src={
+                    user.image
+                      ? user.image
+                      : user && user.gender === "Male"
+                        ? male
+                        : female
+                  }
                   className="size-8 rounded-full bg-gray-800 outline -outline-offset-1 outline-white/10"
                 />
               </MenuButton>

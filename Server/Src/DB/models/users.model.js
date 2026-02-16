@@ -19,7 +19,6 @@ const schema = new mongoose.Schema(
       required: true,
       trim: true,
       unique: true,
-      // allow any valid email, not just gmail/yahoo
       match: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
     },
     password: {
@@ -59,14 +58,13 @@ const schema = new mongoose.Schema(
   }
 );
 
-// Hash password only if modified AND provider is local
 schema.pre("save", async function () {
   if (this.provider === "google") return;
   if (!this.isModified("password")) return;
   this.password = await hashing(this.password);
 });
 
-// Virtual for full name
+
 schema.virtual("username").get(function () {
   return `${this.firstName} ${this.lastName}`;
 });

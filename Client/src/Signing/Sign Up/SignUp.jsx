@@ -11,17 +11,16 @@ export default function SignUp() {
     lastName: "",
     email: "",
     password: "",
-    confirmPassword: "",
+    cPassword: "",
     gender: "",
   });
-  const [error, setError] = useState("");
+  const [error, setError] = useState([]);
 
   function handleChange(e) {
     setData({ ...data, [e.target.name]: e.target.value });
   }
-  function genderSelect(gender)
-  {
-    setData({...data,gender:gender});
+  function genderSelect(gender) {
+    setData({ ...data, gender: gender });
   }
 
   async function handleSubmit(e) {
@@ -31,22 +30,36 @@ export default function SignUp() {
       !data.lastName ||
       !data.email ||
       !data.password ||
-      !data.confirmPassword
+      !data.cPassword
     ) {
       setError("Please complete your data");
       return;
     }
-    if (data.password !== data.confirmPassword) {
+    if (data.password !== data.cPassword) {
       setError("Passwords do not match!");
       return;
     }
     try {
-      console.log(data)
+      console.log(data);
       await axios.post(`${apiUrl}/auth/signUp`, data);
       navigate("/auth/signIn");
-    } catch (error) {
-      console.log(error.message);
+    } catch (err) {
+  if (err.response?.data?.details) {
+    setError(err.response.data.details);
+  } else {
+    if(err.response.data.message.split(" ")[0]==="E11000")
+    {
+      setError(["Email Is Already Exist"]);
     }
+    else
+    {
+      setError(["Something went wrong!"]);
+    console.error(err.response);
+    }
+    
+  }
+}
+
   }
 
   return (
@@ -91,15 +104,15 @@ export default function SignUp() {
           />
           <input
             type="password"
-            name="confirmPassword"
+            name="cPassword"
             placeholder="Confirm Password"
-            value={data.confirmPassword}
+            value={data.cPassword}
             onChange={handleChange}
             className="w-full px-4 py-2 border rounded-lg bg-gray-100 focus:outline-none focus:ring-2 focus:ring-emerald-400"
           />
 
           <GenderSelection gender={genderSelect}></GenderSelection>
-          
+
           {error && <p className="text-red-500 text-sm">{error}</p>}
 
           <button

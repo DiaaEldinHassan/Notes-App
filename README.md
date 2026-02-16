@@ -1,281 +1,101 @@
 # Blog App
 
-A full-stack notes/blog management application with user authentication, built with React and Node.js/Express.
+A full‑stack notes / blog management application built with React (Vite) on the frontend and Node.js + Express + MongoDB on the backend.
 
-## Project Structure
+---
 
-```
-Blog App/
-├── Client/                 # React frontend (Vite)
-│   ├── src/
-│   │   ├── App.jsx
-│   │   ├── main.jsx
-│   │   ├── userContext.jsx      # User context provider
-│   │   ├── userData.jsx          # User data provider
-│   │   ├── Components/
-│   │   │   ├── NavBar/
-│   │   │   ├── SideBar/
-│   │   │   ├── Footer/
-│   │   │   └── OverlayModal/
-│   │   ├── Home/            # Main app pages
-│   │   │   ├── Home.jsx
-│   │   │   ├── Checked/
-│   │   │   ├── Deleted/
-│   │   │   └── Profile/
-│   │   ├── Signing/         # Auth pages
-│   │   │   ├── Sign In/
-│   │   │   └── Sign Up/
-│   │   └── Services/
-│   │       └── notes.service.js
-│   ├── package.json
-│   ├── vite.config.js
-│   └── eslint.config.js
-│
-└── Server/                  # Node.js/Express backend
-    ├── Src/
-    │   ├── index.js
-    │   ├── Common/
-    │   │   ├── Enums/       # Gender, Role enums
-    │   │   ├── Middlewares/ # Auth, Error middlewares
-    │   │   └── Utils/       # Encryption, JWT, validation utilities
-    │   ├── DB/              # MongoDB models & connection
-    │   │   └── models/
-    │   │       ├── users.model.js
-    │   │       └── notes.model.js
-    │   └── Modules/         # API modules
-    │       ├── Auth/
-    │       ├── Notes/
-    │       └── Users/
-    ├── Config/
-    │   ├── config.service.js
-    │   └── env.watcher.js
-    ├── main.js
-    ├── app.bootstrap.js
-    └── package.json
-```
+## What I implemented ✅
 
-## Tech Stack
+- Full authentication flow: sign‑up, sign‑in, JWT issuance, protected routes and token validation.
+- Persistent login on refresh: `UserProvider` fetches userData from `GET /users/userData` and `ProtectRoutes` waits for the provider to finish loading before redirecting (prevents the "redirect-to-sign-in-on-refresh" issue).
+- Notes CRUD: create, update, soft‑delete (recoverable), permanent delete, mark-as-checked, and filtered views for active/checked/deleted notes.
+- User profile: view & edit profile, gender selection, profile avatar logic.
+- Responsive UI: NavBar, SideBar, mobile layout and accessible components (OverlayModal, UpdateForm, Google sign-in button UI).
+- Server-side validation, secure password hashing, JWT middleware and centralized error handling.
 
-### Frontend
-- **React** 19.2.0 - UI framework
-- **Vite** 7.2.4 - Build tool & dev server
-- **React Router** 7.13.0 - Client-side routing
-- **TailwindCSS** 4 - Styling
-- **Headless UI** 2.2.9 - Unstyled accessible components
-- **Heroicons** 2.2.0 - Icon library
-- **Axios** 1.13.4 - HTTP client
-- **FontAwesome** 7.1.0 - Additional icons
+---
 
-### Backend
-- **Node.js** - Runtime
-- **Express** 5.2.1 - Web framework
-- **MongoDB** (via Mongoose 9.1.6) - Database
-- **JWT** 9.0.3 - Authentication tokens
-- **bcrypt** 6.0.0 - Password hashing
-- **CORS** - Cross-origin requests
-- **dotenv** - Environment variables
+## Quick project map (key files you worked on)
 
-## Features
+- Frontend
+  - `src/userContext.jsx` — React context for `user`
+  - `src/userData.jsx` — fetches authenticated user + provides `loading`
+  - `src/ProtectRoutes.jsx` — blocks routes until `loading` finishes
+  - `src/Components/*` — NavBar, SideBar, Footer, OverlayModal, UpdateForm, Google Button
+  - `src/Signing/*` — `SignUp.jsx`, `SignIn.jsx`
+  - `src/Home/*` — `Home.jsx`, `Checked.jsx`, `Deleted.jsx`, `Profile.jsx`
+  - `src/Services/*` — front-end API wrappers (`notes.service.js`, `users.service.js`)
 
-- **User Authentication**
-  - Sign up with email and password
-  - Sign in with JWT tokens
-  - Password encryption with bcrypt
-  - Token-based authorization
+- Backend
+  - `Src/Modules/Auth/*` — `auth.controller.js`, `auth.service.js` (signup/signin)
+  - `Src/Modules/Notes/*` — notes controller/service
+  - `Src/Modules/Users/*` — user service/controller
+  - `Src/Common/Middlewares/*` — `auth.middleware.js`, `error.middleware.js`
+  - `Src/DB/models/*` — `users.model.js`, `notes.model.js`
+  - `Src/Common/Utils/*` — `jwt.utils.js`, `hash.utils.js`, `encrypt.utils.js`, `res.utils.js`
 
-- **Notes Management**
-  - Create, read, update, delete notes
-  - Mark notes as checked/completed
-  - Soft delete with recovery
-  - View separate sections for active, checked, and deleted notes
+---
 
-- **User Profile**
-  - View and edit user profile
-  - Gender selection (Male/Female)
-  - Profile picture based on gender
+## Features (detailed)
 
-- **Responsive UI**
-  - Mobile-friendly navigation
-  - Sidebar navigation
-  - User dropdown menu
-  - Notification bell (UI ready)
+- Authentication: JWT stored in `localStorage`, token verified on each protected request.
+- Route protection: protected client routes (`/profile`, `/notes/*`) guarded by `ProtectRoutes`.
+- Notes: add, edit, soft-delete (recover), hard delete, mark completed/checked.
+- Profile: edit user info and gender; UI shows avatar by gender.
+- UX: loading state for auth on app init (prevents flash/redirect), responsive layout, accessible modal.
 
-## Installation & Setup
+---
 
-### Prerequisites
-- Node.js (v18+)
-- pnpm package manager
-- MongoDB instance (local or cloud)
+## How to run (development)
 
-### Backend Setup
+1. Start MongoDB (local or cloud).
+2. Start backend:
 
 ```bash
 cd Server
-
-# Install dependencies
 pnpm install
-
-# Create .env file with:
-# NODE_ENV=development
-# PORT=5000
-# MONGODB_URI=mongodb://localhost:27017/blog-app
-# JWT_SECRET=your_jwt_secret_key
-# JWT_EXPIRE=7d
-
-# Start development server
+cp .env.example .env   # add your values
 pnpm run dev
-
-# Start production server
-pnpm start
 ```
 
-### Frontend Setup
+3. Start frontend:
 
 ```bash
 cd Client
-
-# Install dependencies
 pnpm install
-
-# Create .env file with:
-# VITE_API_URL=http://localhost:5000
-
-# Start development server
+cp .env.example .env   # set VITE_API_URL
 pnpm run dev
-
-# Build for production
-pnpm build
-
-# Preview production build
-pnpm preview
 ```
 
-## Available Scripts
+Visit `http://localhost:5173` (frontend) and `http://localhost:5000` (API) by default.
 
-### Client
-- `pnpm run dev` - Start development server (Vite)
-- `pnpm run build` - Build for production
-- `pnpm run lint` - Run ESLint
-- `pnpm run preview` - Preview production build
+---
 
-### Server
-- `pnpm run dev` - Start development server with file watching
-- `pnpm start` - Start production server
+## API (summary)
 
-## API Endpoints
+- POST `/auth/signUp` — register
+- POST `/auth/signIn` — login (returns JWT)
+- GET `/users/userData` — return current user (requires Authorization header)
+- PUT `/users/profile` — update profile
+- Notes endpoints: `GET /notes`, `POST /notes`, `PUT /notes/:id`, `DELETE /notes/:id`, `GET /notes/checked`, `GET /notes/deleted`
 
-### Authentication
-- `POST /auth/signUp` - Register new user
-- `POST /auth/signIn` - Login user
+---
 
-### Users
-- `GET /users/userData` - Get authenticated user data
-- `PUT /users/profile` - Update user profile
+## Recent changes / important fixes 🔧
 
-### Notes
-- `GET /notes` - Get user's notes
-- `POST /notes` - Create new note
-- `PUT /notes/:id` - Update note
-- `DELETE /notes/:id` - Delete note
-- `GET /notes/checked` - Get checked notes
-- `GET /notes/deleted` - Get deleted notes
+- Fixed: page refresh immediately redirected to sign-in. Added `loading` state in `UserProvider` (`src/userData.jsx`) and updated `ProtectRoutes.jsx` to wait for loading before redirecting — fixes persistent-auth UX.
+- Implemented: soft-delete + recovery for notes and protected route handling.
 
-## Context & State Management
+---
 
-### UserContext
-Located in `src/userContext.jsx` - Simple React Context for user state
-- Provides: `user` object and `setUser` function
-- Used in: NavBar, Profile, and other authenticated components
+## How to manually verify core flows (smoke tests) 🧪
 
-### UserProvider
-Located in `src/userData.jsx` - Context Provider component
-- Fetches user data on app initialization
-- Handles token validation
-- Provides user data to entire app
+1. Sign up a new user → you'll receive a JWT and be redirected to the dashboard.
+2. Create, edit, mark-checked, and delete a note. Visit `Deleted` to restore.
+3. Edit your profile and change gender — verify avatar updates.
+4. Refresh the browser on any protected route — you should remain signed in (no premature redirect).
 
-## Security Features
-
-- JWT-based authentication
-- Password hashing with bcrypt
-- Token validation middleware
-- CORS configuration
-- Encrypted sensitive data
-- Environment variable protection
-
-## File Structure Details
-
-### Client Components
-- **NavBar** - Navigation bar with user dropdown
-- **SideBar** - Sidebar navigation
-- **Footer** - Footer component
-- **OverlayModal** - Reusable modal
-- **Gender Selection** - Gender picker component
-
-### Backend Utilities
-- `jwt.utils.js` - JWT creation and verification
-- `encrypt.utils.js` / `decrypt.utils.js` - Data encryption
-- `hash.utils.js` - Password hashing
-- `error.utils.js` - Error handling
-- `res.utils.js` - Response formatting
-- `success.utils.js` - Success response formatting
-
-## Environment Variables
-
-### Backend (.env)
-```
-NODE_ENV=development
-PORT=5000
-MONGODB_URI=mongodb://localhost:27017/blog-app
-JWT_SECRET=your_secret_key
-JWT_EXPIRE=7d
-```
-
-### Frontend (.env)
-```
-VITE_API_URL=http://localhost:5000
-```
-
-## Error Handling
-
-- Centralized error middleware in backend
-- Global error handler in frontend
-- Validation on both client and server
-- User-friendly error messages
-
-## Development Workflow
-
-1. Frontend runs on `http://localhost:5173` (Vite default)
-2. Backend runs on `http://localhost:5000` (configurable)
-3. MongoDB connection required for backend
-4. Token stored in localStorage on client
-5. CORS configured to allow frontend requests
-
-## Future Enhancements
-
-- Rich text editor for notes
-- Note categories/tags
-- Shared notes functionality
-- Search and filtering
-- Dark mode toggle
-- Notification system
-- File attachments
-- Note versioning/history
-
-## Author
-
-Diaa El-Din Hassan
-
-## License
-
-ISC
-
-## Support
-
-For issues or questions, please check the project structure and ensure:
-- MongoDB is running
-- Environment variables are configured
-- Dependencies are installed with `pnpm install`
-- Ports 5000 (backend) and 5173 (frontend) are available
+---
 
 ## Screenshots
 
@@ -290,3 +110,14 @@ For issues or questions, please check the project structure and ensure:
 
 ### Profile
 ![User Profile](screenshots/profile.png)
+
+---
+
+## Author
+
+Diaa El‑Din Hassan
+
+## License
+
+ISC
+

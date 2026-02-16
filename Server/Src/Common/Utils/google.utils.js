@@ -7,9 +7,7 @@ export async function googleVerification(token) {
     idToken: token,
     audience: client_id,
   });
-
   const payload = ticket.getPayload();
-
   const { email, given_name, family_name, picture } = payload;
 
   return { email,firstName:given_name,lastName:family_name, picture };
